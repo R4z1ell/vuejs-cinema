@@ -1,24 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue.js Cinema</title>
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <!-- In this Project we had to put the 'v-cloak' here DIRECTLY in the 'head' tag and not inside the 'style.scss'
+    like we did in the previous Project because this time it WOULDN'T work. The reason is that we create our CSS 
+    file as a JavaScript Module this time(we load it inside our 'main.js' file right at the top with the import), 
+    and then Webpack TURNS it into a JavaScript Module. The consequence of this is that now the CSS doesn't actually
+    load UNTIL the rest of the JavaScripts LOADS, that means that if we had our 'v-cloak' inside the CSS it wouldn't
+    actually load untill the rest of the JavaScripts loads and that would take AWAY the point of using 'v-cloak'.
+    For this reason 'v-cloak' HAS to be defined here inside the 'head' tag  -->
     <style>
         [v-cloak] {
             display: none !important;
         }
     </style>
 </head>
+
 <body>
-<div id="app">
-    <div id="title">
-        <img src="/public/logo.png">
-        <h1>Vue.js Cinema</h1>
+    <div id="app" v-cloak>
+        <div id="title">
+            <img src="/public/logo.png">
+            <h1>Vue.js Cinema</h1>
+        </div>
+        <!-- This 'keep-alive' is a SPECIAL Component that when wrapped around a DYNAMIC Component(like our 
+        'router-view' in this case) will CACHES the inactive Component instances without DESTROYING them. So pretty
+        much Vue.js keep them in memory. In our case we're using it because if we applyied some filter and then
+        we click on one of the filtered Movie to visit their "Detail" page and then we GET back on the home page
+        by clicking on the 'Back to results' button, in the home page we would see ONLY the filtered movie and NOT
+        all of them, because the other were DESTROYED and not kept in memory like they are now thanks to this
+        'keep-alive' Component -->
+        <keep-alive>
+            <router-view v-bind:genre="genre" v-bind:time="time" v-bind:movies="movies" v-bind:day="day"></router-view>
+        </keep-alive>
     </div>
-</div>
-<script src="/dist/build.js"></script>
+    <script src="/dist/build.js"></script>
 </body>
+
 </html>
